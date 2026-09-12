@@ -24,6 +24,9 @@ from fastapi_red.runtime import flows as runtime_flows
 from fastapi_red.runtime import comms as runtime_comms
 
 
+from fastapi_red.plugins import load_plugins
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """ Application startup and shutdown lifecycle management,
@@ -33,6 +36,8 @@ async def lifespan(app: FastAPI):
     runtime_nodes.init()
     runtime_flows.init()
     runtime_comms.init()
+    # Discover and load third-party plugins
+    load_plugins(app)
     # Start flow engine execution
     await runtime_flows.start_flows()
     yield

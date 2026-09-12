@@ -146,22 +146,53 @@ def get_node_config(set_id: str, lang: str = "en-US") -> Optional[str]:
     return None
 
 
+def register_icons(module_name: str, icons_dir: Path):
+    """ Registers an icons directory for a specific module.
+    """
+    if icons_dir.is_dir():
+        if module_name not in icon_paths:
+            icon_paths[module_name] = []
+        icon_paths[module_name].append(icons_dir)
+
+
 def get_node_icons() -> Dict[str, List[str]]:
     """ Returns the dictionary of available icons grouped by module,
     matching getNodeIcons() in @node-red/registry/lib/registry.js.
     """
-    icons: List[str] = []
+    result: Dict[str, List[str]] = {}
+    # Core icons
+    core_icons: List[str] = []
     if settings.icons_dir.is_dir():
         for f in settings.icons_dir.iterdir():
             if f.is_file() and f.suffix.lower() in [".svg", ".png"]:
-                icons.append(f.name)
-    return {"node-red": sorted(icons)}
+                core_icons.append(f.name)
+    result["node-red"] = sorted(core_icons)
+
+    # Registered plugin / module icons
+    for mod_name, paths in icon_paths.items():
+        mod_icons: List[str] = []
+        for p in paths:
+            if p.is_dir():
+                for f in p.iterdir():
+                    if f.is_file() and f.suffix.lower() in [".svg", ".png"]:
+                        mod_icons.append(f.name)
+        result[mod_name] = sorted(list(set(mod_icons)))
+
+    return result
 
 
 def get_node_icon_path(module_name: str, icon_name: str) -> Optional[Path]:
     """ Resolves the filesystem path for a specific icon,
     matching getNodeIconPath() in @node-red/registry/lib/registry.js.
     """
+    # Check custom module icon directories first
+    if module_name in icon_paths:
+        for p in icon_paths[module_name]:
+            candidate = p / icon_name
+            if candidate.is_file():
+                return candidate
+
+    # Fallback to core icons directory
     icon_file = settings.icons_dir / icon_name
     if icon_file.is_file():
         return icon_file
