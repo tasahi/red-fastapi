@@ -11,8 +11,8 @@ import asyncio
 import json
 import pytest
 from fastapi.testclient import TestClient
-from fastapi_red.main import app
-from fastapi_red.runtime import comms as runtime_comms
+from red_fastapi.main import app
+from red_fastapi.runtime import comms as runtime_comms
 
 
 client = TestClient(app)

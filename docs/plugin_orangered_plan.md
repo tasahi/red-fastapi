@@ -1,18 +1,18 @@
 ---
-title: Implementation Plan - OrangeRed as a FastAPI-Red Plugin
+title: Implementation Plan - OrangeRed as a Red-Fastapi Plugin
 document_type: Architecture & Implementation Plan
-project: fastapi-red
-target: Plan the migration of OrangeRed into an external, decoupled plugin for FastAPI-Red
-repository_status: Separate Git Repository (fastapi-red-orangered)
+project: red-fastapi
+target: Plan the migration of OrangeRed into an external, decoupled plugin for Red-Fastapi
+repository_status: Separate Git Repository (red-fastapi-orangered)
 status: Ready for Review
 date: September 2026
 ---
 
-# Architecture & Implementation Plan: OrangeRed Plugin for FastAPI-Red
+# Architecture & Implementation Plan: OrangeRed Plugin for Red-Fastapi
 
-**Target Package:** `fastapi-red-orangered`  
-**Repository Model:** Independent Git repository (`git@github.com:.../fastapi-red-orangered.git`)  
-**Host Framework:** `fastapi-red` Core Runtime  
+**Target Package:** `red-fastapi-orangered`  
+**Repository Model:** Independent Git repository (`git@github.com:.../red-fastapi-orangered.git`)  
+**Host Framework:** `red-fastapi` Core Runtime  
 **Document Type:** Plugin Architecture & Migration Specification  
 **Date:** September 2026  
 
@@ -27,17 +27,17 @@ Currently, **OrangeRed** runs as a split-brain, multi-process application:
 3. **Communication Overhead:** State, synchronization loops (500ms debounce), and bridge endpoints (`or-bridge-in`, `or-bridge-out`) introduce network serialization, latency, and operational complexity.
 
 ### Unified Vision
-Because **FastAPI-Red** is a 100% Python rewrite of the Node-RED runtime engine that hosts the unmodified Node-RED editor, **OrangeRed can be transformed into a native, single-process Python plugin**.
+Because **Red-Fastapi** is a 100% Python rewrite of the Node-RED runtime engine that hosts the unmodified Node-RED editor, **OrangeRed can be transformed into a native, single-process Python plugin**.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────┐
-│                   fastapi-red Core Runtime (Single Python Process)              │
+│                   red-fastapi Core Runtime (Single Python Process)              │
 │                                                                                  │
 │   FastAPI Server Layer (/nodes, /flows, /comms, /settings, /static)              │
 │     │                                                                            │
 │     ├── Plugin Discovery System (`importlib.metadata` entry points)              │
 │     │     │                                                                      │
-│     │     └──► Loads `fastapi-red-orangered` (External Git Repo / PyPI Package)  │
+│     │     └──► Loads `red-fastapi-orangered` (External Git Repo / PyPI Package)  │
 │     │            ├── 1. Registers Node Templates (.html) in Node Registry       │
 │     │            ├── 2. Registers Orange Node Types in FlowEngine               │
 │     │            └── 3. Mounts Data & Preview APIRouter (/api/orangered/*)       │
@@ -56,22 +56,22 @@ Because **FastAPI-Red** is a 100% Python rewrite of the Node-RED runtime engine 
 
 ## 2. Multi-Repository Boundary & Contract
 
-The plugin will be developed, versioned, and maintained in its **own dedicated Git repository** separate from `fastapi-red`.
+The plugin will be developed, versioned, and maintained in its **own dedicated Git repository** separate from `red-fastapi`.
 
 ### Repository Structure
 
 ```
-fastapi-red-orangered/               <-- Dedicated Git Repository
+red-fastapi-orangered/               <-- Dedicated Git Repository
 ├── .git/
 ├── pyproject.toml                  <-- Declares entry-point hook
 ├── requirements.txt                <-- Orange3, scikit-learn, scipy, xarray
 ├── README.md
 ├── src/
-│   └── fastapi_red_orangered/
+│   └── red_fastapi_orangered/
 │       ├── __init__.py             <-- Plugin entrypoint hook
 │       ├── plugin.py               <-- OrangeRedPlugin lifecycle implementation
 │       ├── api.py                  <-- APIRouter for previews, metrics, images
-│       ├── base_node.py            <-- OrangeBaseNode(fastapi_red.runtime.node.Node)
+│       ├── base_node.py            <-- OrangeBaseNode(red_fastapi.runtime.node.Node)
 │       ├── conversion.py           <-- Orange.data.Table <-> DataFrame / Dict
 │       ├── nodes/                  <-- Node definitions mapped to widget types
 │       │   ├── data_nodes.py       <-- or-file-loader, or-data-sampler, etc.
@@ -92,11 +92,11 @@ fastapi-red-orangered/               <-- Dedicated Git Repository
 
 ---
 
-## 3. Core Framework Prerequisites (`fastapi-red`)
+## 3. Core Framework Prerequisites (`red-fastapi`)
 
-Before the plugin can be attached, `fastapi-red` requires a lightweight, extensible plugin architecture:
+Before the plugin can be attached, `red-fastapi` requires a lightweight, extensible plugin architecture:
 
-### 3.1. Plugin Contract (`fastapi_red.plugins.base`)
+### 3.1. Plugin Contract (`red_fastapi.plugins.base`)
 ```python
 class BasePlugin:
     name: str
@@ -116,12 +116,12 @@ class BasePlugin:
 ```
 
 ### 3.2. Entry-Point Auto-Discovery
-In `fastapi_red.main` during application startup (`lifespan`):
+In `red_fastapi.main` during application startup (`lifespan`):
 ```python
 from importlib.metadata import entry_points
 
 def load_installed_plugins(app, registry, engine):
-    discovered = entry_points(group="fastapi_red.plugins")
+    discovered = entry_points(group="red_fastapi.plugins")
     for ep in discovered:
         plugin_cls = ep.load()
         plugin = plugin_cls()
@@ -131,22 +131,22 @@ def load_installed_plugins(app, registry, engine):
             app.include_router(router)
 ```
 
-In `fastapi-red-orangered/pyproject.toml`:
+In `red-fastapi-orangered/pyproject.toml`:
 ```toml
-[project.entry-points."fastapi_red.plugins"]
-orangered = "fastapi_red_orangered.plugin:OrangeRedPlugin"
+[project.entry-points."red_fastapi.plugins"]
+orangered = "red_fastapi_orangered.plugin:OrangeRedPlugin"
 ```
 
 ---
 
-## 4. OrangeRed Plugin Architecture (`fastapi-red-orangered`)
+## 4. OrangeRed Plugin Architecture (`red-fastapi-orangered`)
 
 ### 4.1. Base Node Adapter (`base_node.py`)
 Each Orange node runs as an `asyncio` task within the flow graph. The `OrangeBaseNode` wraps the existing `HeadlessWidget` classes:
 
 ```python
-from fastapi_red.runtime.node import Node
-from fastapi_red_orangered.widgets import HeadlessWidget
+from red_fastapi.runtime.node import Node
+from red_fastapi_orangered.widgets import HeadlessWidget
 
 class OrangeBaseNode(Node):
     widget_class: type[HeadlessWidget]
@@ -189,10 +189,10 @@ class OrangeBaseNode(Node):
 
 ### 4.3. Eliminating `orangered-client.js`
 * The old Node.js client file (`orangered-client.js`) with its debounced HTTP deployment calls is **completely deleted**.
-* Node lifecycle, wire routing, and deployments are directly handled by `fastapi-red`'s native deployment workflow.
+* Node lifecycle, wire routing, and deployments are directly handled by `red-fastapi`'s native deployment workflow.
 
 ### 4.4. Unified REST API for Previews
-The existing preview and diagnostic endpoints are packaged into an `APIRouter` in `fastapi_red_orangered.api` and mounted at `/api/orangered`:
+The existing preview and diagnostic endpoints are packaged into an `APIRouter` in `red_fastapi_orangered.api` and mounted at `/api/orangered`:
 * `GET /api/orangered/preview/{node_id}/{output_name}`: Paginated Tabulator preview rows.
 * `GET /api/orangered/image/{node_id}/{output_name}`: PNG array buffer for SciPy image nodes.
 * `GET /api/orangered/metrics/{node_id}`: Classification/Regression metrics for Test & Score.
@@ -203,16 +203,16 @@ The existing preview and diagnostic endpoints are packaged into an `APIRouter` i
 
 ## 5. Phased Implementation Roadmap
 
-### Phase 1: `fastapi-red` Plugin Hook System
-- [ ] Define `BasePlugin` interface in `fastapi_red.plugins`.
-- [ ] Implement `importlib.metadata` entry-point discovery in `fastapi_red.main:lifespan`.
-- [ ] Extend `fastapi_red.runtime.registry` to accept external node template directories and icons.
+### Phase 1: `red-fastapi` Plugin Hook System
+- [ ] Define `BasePlugin` interface in `red_fastapi.plugins`.
+- [ ] Implement `importlib.metadata` entry-point discovery in `red_fastapi.main:lifespan`.
+- [ ] Extend `red_fastapi.runtime.registry` to accept external node template directories and icons.
 - [ ] Add unit test verifying that dummy plugins can register nodes and routes.
 
 ### Phase 2: Repository Scaffolding & Core Wrapper
-- [ ] Initialize `fastapi-red-orangered` Git repository with modern `pyproject.toml`.
+- [ ] Initialize `red-fastapi-orangered` Git repository with modern `pyproject.toml`.
 - [ ] Port `src/headless_widget.py`, `src/conversion.py`, and `src/widgets/` from OrangeRed.
-- [ ] Implement `OrangeBaseNode` extending `fastapi_red.runtime.node.Node`.
+- [ ] Implement `OrangeBaseNode` extending `red_fastapi.runtime.node.Node`.
 - [ ] Implement entry-point class `OrangeRedPlugin`.
 
 ### Phase 3: Node Migration & Category Packaging
@@ -225,7 +225,7 @@ The existing preview and diagnostic endpoints are packaged into an `APIRouter` i
 - [ ] Adapt `or-bridge-in` and `or-bridge-out` to serve as seamless type-adapters between native Node-RED event streams and Orange tables.
 
 ### Phase 5: Verification & End-to-End Testing
-- [ ] **E2E DAG Tests:** Load dataset (`iris`) -> Preprocess (Normalize) -> Train (Random Forest) -> Evaluate (Test & Score) within FastAPI-Red.
+- [ ] **E2E DAG Tests:** Load dataset (`iris`) -> Preprocess (Normalize) -> Train (Random Forest) -> Evaluate (Test & Score) within Red-Fastapi.
 - [ ] **Bridge Stream Tests:** Trigger via HTTP In -> Model Inference -> Emit via HTTP Response.
 - [ ] **UI Validation:** Verify all 40+ node dialogs, Tabulator tables, and Plotly charts load seamlessly in the stock Node-RED canvas.
 
@@ -236,14 +236,14 @@ The existing preview and diagnostic endpoints are packaged into an `APIRouter` i
 ### Installation & Run Workflow
 
 ```bash
-# 1. Install FastAPI-Red
-pip install fastapi-red
+# 1. Install Red-Fastapi
+pip install red-fastapi
 
 # 2. Install the OrangeRed plugin from its repository or PyPI
-pip install git+https://github.com/tasahi/fastapi-red-orangered.git
+pip install git+https://github.com/tasahi/red-fastapi-orangered.git
 
 # 3. Start the unified server
-fastapi-red
+red-fastapi
 ```
 
 ### Result

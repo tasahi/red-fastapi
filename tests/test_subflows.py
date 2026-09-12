@@ -1,4 +1,4 @@
-""" Unit tests for Subflows and Custom Modules in FastAPI-Red.
+""" Unit tests for Subflows and Custom Modules in Red-Fastapi.
 
 Validates:
 - Subflow template definition (`type: "subflow"`)
@@ -13,7 +13,7 @@ Validates:
 
 import asyncio
 import pytest
-from fastapi_red.runtime.engine import FlowEngine
+from red_fastapi.runtime.engine import FlowEngine
 
 
 @pytest.mark.asyncio

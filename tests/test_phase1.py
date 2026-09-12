@@ -3,7 +3,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from fastapi_red.main import app
+from red_fastapi.main import app
 
 
 client = TestClient(app)

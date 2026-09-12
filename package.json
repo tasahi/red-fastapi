@@ -1,7 +1,7 @@
 {
-  "name": "fastapi-red-frontend",
+  "name": "red-fastapi-frontend",
   "version": "0.1.0",
-  "description": "Vite frontend compiler and modular node builder for fastapi-red",
+  "description": "Vite frontend compiler and modular node builder for red-fastapi",
   "private": true,
   "type": "module",
   "scripts": {

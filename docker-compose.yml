@@ -1,9 +1,9 @@
 services:
-  fastapi-red:
+  red-fastapi:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fastapi-red
+    container_name: red-fastapi
     restart: unless-stopped
     ports:
       - "8080:8080"

@@ -1,8 +1,8 @@
 ---
-title: Gap Analysis - Node-RED (Node.js) vs FastAPI-Red (Python)
+title: Gap Analysis - Node-RED (Node.js) vs Red-Fastapi (Python)
 document_type: OKF (Objectives & Key Findings) / Gap Analysis
-project: fastapi-red
-target: Identify architectural and functional gaps between Node-RED and FastAPI-Red
+project: red-fastapi
+target: Identify architectural and functional gaps between Node-RED and Red-Fastapi
 status: Approved
 date: September 2026
 baseline:
@@ -11,9 +11,9 @@ baseline:
   automated_tests: 68/68 passing
 ---
 
-# Gap Analysis: Node-RED (Node.js) vs. FastAPI-Red (Python)
+# Gap Analysis: Node-RED (Node.js) vs. Red-Fastapi (Python)
 
-**Project:** `fastapi-red`  
+**Project:** `red-fastapi`  
 **Document Type:** Technical Gap Analysis & Architectural Comparison  
 **Status:** Approved  
 **Date:** September 2026  
@@ -22,21 +22,21 @@ baseline:
 
 ## 1. Executive Summary
 
-`fastapi-red` successfully achieves **100% frontend wire compatibility** with the unmodified stock Node-RED editor client (`@node-red/editor-client`). The core application lifecycle, node template discovery, persistent storage (`storage/flows.json`), bidirectional real-time WebSocket communication (`/comms`), and asynchronous wire message execution (`asyncio`) are operational across all initial phases.
+`red-fastapi` successfully achieves **100% frontend wire compatibility** with the unmodified stock Node-RED editor client (`@node-red/editor-client`). The core application lifecycle, node template discovery, persistent storage (`storage/flows.json`), bidirectional real-time WebSocket communication (`/comms`), and asynchronous wire message execution (`asyncio`) are operational across all initial phases.
 
 Furthermore, **Phases 6 through 13** have closed all primary node library gaps, implementing 34+ essential nodes across data manipulation, conditional routing, timing, sequences, flow control, hierarchical context stores, cross-flow link routing, dynamic HTTP ingress/egress, socket/MQTT network protocols, subflow composite modules, local filesystem storage, AWS S3 / MinIO cloud blob storage, multi-format parsers (JSON, CSV, YAML, XML, HTML), and full JSONata & Python expression evaluation.
 
-This document provides an up-to-date assessment of closed milestones and remaining functional, architectural, and ecosystem differences between the complete upstream Node-RED backend and `fastapi-red`.
+This document provides an up-to-date assessment of closed milestones and remaining functional, architectural, and ecosystem differences between the complete upstream Node-RED backend and `red-fastapi`.
 
 ---
 
 ## 2. Gap Comparison Matrix
 
-| Capability / Subsystem | Upstream Node-RED (Node.js) | FastAPI-Red (Python) | Status |
+| Capability / Subsystem | Upstream Node-RED (Node.js) | Red-Fastapi (Python) | Status |
 | :--- | :--- | :--- | :--- |
 | **Frontend Shell Hosting** | Express.js static mount | FastAPI `StaticFiles` + Monaco bootstrap | **Done (100%)** |
-| **Node Registry & Templates** | `@node-red/registry` | `fastapi_red.runtime.registry` | **Done (100%)** |
-| **Flow Storage & Deployment** | Filesystem JSON + revisioning | `fastapi_red.runtime.storage` + MD5 `rev` | **Done (100%)** |
+| **Node Registry & Templates** | `@node-red/registry` | `red_fastapi.runtime.registry` | **Done (100%)** |
+| **Flow Storage & Deployment** | Filesystem JSON + revisioning | `red_fastapi.runtime.storage` + MD5 `rev` | **Done (100%)** |
 | **Real-time Event Bus** | WebSocket `ws` `/comms` | FastAPI native WebSocket `/comms` | **Done (100%)** |
 | **Async Flow Execution Engine** | Event-driven JS pipeline | `asyncio` task graph compiler (`FlowEngine`) | **Done (100%)** |
 | **Core Sequence & Logic Nodes** | `change`, `switch`, `range`, `delay`, `trigger`, `comment` | Implemented in `logic_nodes.py` & `eval.py` | **Done (100%)** |
@@ -57,12 +57,12 @@ This document provides an up-to-date assessment of closed milestones and remaini
 
 ### 3.1. Core Node Library Coverage
 * **Upstream Node-RED:** Ships with **~38 built-in nodes** organized into categories:
-  - **Common:** `inject`, `debug`, `comment`, `complete`, `catch`, `status`, `link in`, `link out`, `link call`. *(100% Complete in FastAPI-Red)*
-  - **Function & Logic:** `function`, `switch`, `change`, `range`, `delay`, `trigger`. *(100% Complete in FastAPI-Red)*
-  - **Sequence:** `split`, `join`, `sort`, `batch`. *(100% Complete in FastAPI-Red)*
-  - **Network:** `http in`, `http response`, `http request`, `mqtt in`, `mqtt out`, `mqtt-broker`, `websocket in`, `websocket out`, `tcp in`, `tcp out`, `udp in`, `udp out`. *(100% Complete in FastAPI-Red)*
-  - **Storage:** `file`, `file in`, `watch`, plus Cloud Blob Storage (`s3 in`, `s3 out`, `s3-config` for AWS S3 and MinIO). *(100% Complete in FastAPI-Red)*
-  - **Parsers:** `json`, `csv`, `html`, `xml`, `yaml`. *(100% Complete in FastAPI-Red)*
+  - **Common:** `inject`, `debug`, `comment`, `complete`, `catch`, `status`, `link in`, `link out`, `link call`. *(100% Complete in Red-Fastapi)*
+  - **Function & Logic:** `function`, `switch`, `change`, `range`, `delay`, `trigger`. *(100% Complete in Red-Fastapi)*
+  - **Sequence:** `split`, `join`, `sort`, `batch`. *(100% Complete in Red-Fastapi)*
+  - **Network:** `http in`, `http response`, `http request`, `mqtt in`, `mqtt out`, `mqtt-broker`, `websocket in`, `websocket out`, `tcp in`, `tcp out`, `udp in`, `udp out`. *(100% Complete in Red-Fastapi)*
+  - **Storage:** `file`, `file in`, `watch`, plus Cloud Blob Storage (`s3 in`, `s3 out`, `s3-config` for AWS S3 and MinIO). *(100% Complete in Red-Fastapi)*
+  - **Parsers:** `json`, `csv`, `html`, `xml`, `yaml`. *(100% Complete in Red-Fastapi)*
 * **Current State:** 34+ built-in and extended cloud nodes implemented with full runtime execution and HTML template discovery.
 
 
@@ -73,7 +73,7 @@ This document provides an up-to-date assessment of closed milestones and remaini
   - Provides a 3-tier hierarchical scope (`node`, `flow`, `global`).
   - REST API `GET/POST /context/:scope/:id` consumed by the editor's "Context Data" sidebar.
 * **Current State:**
-  - Fully implemented in `fastapi_red.runtime.context`.
+  - Fully implemented in `red_fastapi.runtime.context`.
   - Integrated with property evaluators (`eval.py`), `ChangeNode` (`pt="flow"` / `pt="global"`), and `FunctionNode` (`flow_ctx` and `global_ctx` injected into Python scopes).
 * **Remaining Enhancement:** Mount `GET/POST /context/{scope}/{id}` REST endpoint to populate the optional editor Context sidebar view.
 
@@ -82,9 +82,9 @@ This document provides an up-to-date assessment of closed milestones and remaini
 ### 3.3. Subflows & Groups
 * **Upstream Node-RED:**
   - **Subflows:** Composite custom nodes containing nested wire graphs that map internal inputs/outputs to outer port pins.
-  - **Link Nodes:** Cross-flow wireless routing. *(100% Complete in FastAPI-Red)*
+  - **Link Nodes:** Cross-flow wireless routing. *(100% Complete in Red-Fastapi)*
 * **Current State:**
-  - Fully implemented in `fastapi_red.runtime.subflow` (`SubflowInstanceNode`) and integrated into `FlowEngine`.
+  - Fully implemented in `red_fastapi.runtime.subflow` (`SubflowInstanceNode`) and integrated into `FlowEngine`.
   - Subflow template definitions (`type: "subflow"`) and instance nodes (`type: "subflow:<id>"`) unroll internal graphs with namespaced IDs (`{instance_id}:{node_id}`).
   - Resolves multi-port input wires (`in`) and output wires (`out`).
   - Supports nested subflows (subflow instances inside subflows).
@@ -119,7 +119,7 @@ This document provides an up-to-date assessment of closed milestones and remaini
 * **Upstream Node-RED:**
   - "Manage Palette" dialog queries the central NPM registry, downloads `node-red-contrib-*` packages, and injects them live into the runtime.
 * **Current State:** External module installation is disabled (`allowInstall: false`).
-* **Resolution Path:** Design a Python plugin architecture using Python entry points (e.g., `fastapi_red_nodes`) allowing pip-installed packages to register custom Python nodes and HTML templates automatically.
+* **Resolution Path:** Design a Python plugin architecture using Python entry points (e.g., `red_fastapi_nodes`) allowing pip-installed packages to register custom Python nodes and HTML templates automatically.
 
 ---
 

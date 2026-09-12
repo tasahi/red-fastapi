@@ -17,7 +17,7 @@ import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 import pytest
-from fastapi_red.runtime.engine import FlowEngine
+from red_fastapi.runtime.engine import FlowEngine
 
 
 @pytest.mark.asyncio
@@ -226,7 +226,7 @@ async def test_file_storage_nodes():
     try:
         # 1. Write file
         writer = engine.get_node("f_write")
-        await writer.on_input({"payload": "FastAPI-Red File Node Test Content"})
+        await writer.on_input({"payload": "Red-Fastapi File Node Test Content"})
         await asyncio.sleep(0.05)
         assert test_file.exists()
 
@@ -235,7 +235,7 @@ async def test_file_storage_nodes():
         await reader.on_input({})
         await asyncio.sleep(0.05)
         assert len(read_results) == 1
-        assert "FastAPI-Red File Node Test Content" in read_results[0]["payload"]
+        assert "Red-Fastapi File Node Test Content" in read_results[0]["payload"]
 
         # 3. Delete file
         deleter = engine.get_node("f_delete")

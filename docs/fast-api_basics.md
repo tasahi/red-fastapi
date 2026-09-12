@@ -1,7 +1,7 @@
 ---
 title: Node-RED to Python (FastAPI) Backend Migration
 document_type: OKF (Objectives & Key Findings) / Technical One-Pager
-project: fastapi-red
+project: red-fastapi
 target: Port Node-RED backend to Python (FastAPI) while preserving 100% of the stock frontend editor
 status: Completed
 phases:
@@ -11,7 +11,7 @@ date: September 2026
 
 # Node-RED to Python (FastAPI) Backend Migration
 
-**Project:** `fastapi-red`  
+**Project:** `red-fastapi`  
 **Document Type:** Objectives & Key Findings (OKF) / Technical One-Pager  
 **Status:** All 13 Phases Completed (68/68 Automated Tests Passing)  
 **Target:** Port Node-RED backend to Python (FastAPI) while preserving 100% of the stock frontend editor  
@@ -115,7 +115,7 @@ Direct static source code analysis of the official upstream Node-RED monorepo (`
 * Implemented using FastAPI's native async WebSocket support.
 
 ### 3. The "Function" Node Execution
-* Standard Node-RED uses Node.js `vm`. In `fastapi-red`, Function nodes execute native Python expressions/code blocks with `msg` in local scope.
+* Standard Node-RED uses Node.js `vm`. In `red-fastapi`, Function nodes execute native Python expressions/code blocks with `msg` in local scope.
 
 ### 4. Frontend Compilation & Static Ingress Architecture
 * **Vite Modular Compilation (`npm run build`)**:
@@ -126,7 +126,7 @@ Direct static source code analysis of the official upstream Node-RED monorepo (`
   - Automatically mounts and serves `dist/` if present, with dynamic resolution of modular node chunks.
 * **Apache Ingress Delivery (Production / Docker)**:
   - In a containerized topology, Apache HTTP Server sits at the entrance (`:80`/`:443`) delivering `dist/` static files directly from volume mount at wire speed.
-  - Apache reverse-proxies REST endpoints (`/nodes`, `/flows`, `/settings`) and WebSocket comms (`/comms`) directly to the `fastapi-red` container.
+  - Apache reverse-proxies REST endpoints (`/nodes`, `/flows`, `/settings`) and WebSocket comms (`/comms`) directly to the `red-fastapi` container.
 
 ---
 

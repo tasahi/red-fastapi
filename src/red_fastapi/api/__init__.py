@@ -1,0 +1,4 @@
+"""
+Red-Fastapi API package.
+"""
+

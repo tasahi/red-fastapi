@@ -11,7 +11,7 @@ Tests:
 
 import asyncio
 import pytest
-from fastapi_red.runtime.sequence_nodes import (
+from red_fastapi.runtime.sequence_nodes import (
     SplitNode,
     JoinNode,
     SortNode,
@@ -19,7 +19,7 @@ from fastapi_red.runtime.sequence_nodes import (
     StatusNode,
     CompleteNode,
 )
-from fastapi_red.runtime.node import Node
+from red_fastapi.runtime.node import Node
 
 
 class MockFlow:

@@ -1,8 +1,8 @@
 ---
 title: Implementation Plan - Core Execution Nodes and Sequence & Logic Nodes
 document_type: OKF (Objectives & Key Findings) / Architecture & Implementation Plan
-project: fastapi-red
-target: Plan the implementation of Core Execution Nodes and Sequence & Logic Nodes for FastAPI-Red Python runtime
+project: red-fastapi
+target: Plan the implementation of Core Execution Nodes and Sequence & Logic Nodes for Red-Fastapi Python runtime
 status: Ready for Review
 date: September 2026
 baseline:
@@ -12,7 +12,7 @@ baseline:
 
 # Implementation Plan: Core Execution Nodes & Sequence & Logic Nodes
 
-**Project:** `fastapi-red`  
+**Project:** `red-fastapi`  
 **Document Type:** Architecture & Implementation Plan  
 **Status:** Ready for Review  
 **Date:** September 2026  
@@ -21,9 +21,9 @@ baseline:
 
 ## 1. Executive Summary & Objective
 
-In Phase 5, `fastapi-red` successfully established an asynchronous message-passing flow execution engine (`FlowEngine` and `Node` base class), supporting `inject`, `debug`, and `function` (Python code evaluation).
+In Phase 5, `red-fastapi` successfully established an asynchronous message-passing flow execution engine (`FlowEngine` and `Node` base class), supporting `inject`, `debug`, and `function` (Python code evaluation).
 
-The objective of this plan is to expand `fastapi-red`'s node library to include the most essential **Core Execution Nodes** and **Sequence & Logic Nodes** from upstream Node-RED (`@node-red/nodes/core`), implementing their execution logic in Python while maintaining complete wire-protocol and visual editor compatibility with `@node-red/editor-client`.
+The objective of this plan is to expand `red-fastapi`'s node library to include the most essential **Core Execution Nodes** and **Sequence & Logic Nodes** from upstream Node-RED (`@node-red/nodes/core`), implementing their execution logic in Python while maintaining complete wire-protocol and visual editor compatibility with `@node-red/editor-client`.
 
 ---
 
@@ -67,7 +67,7 @@ We organize the implementation into cohesive sequential phases:
 
 ## 3. Architecture & Technical Design
 
-### 3.1 Property Evaluation Helper (`fastapi_red.runtime.eval.py`)
+### 3.1 Property Evaluation Helper (`red_fastapi.runtime.eval.py`)
 To handle `change`, `switch`, and `range` nodes consistently with Node-RED, we introduce a unified property accessor / evaluator utility:
 - **`get_property(msg, prop_path)`**: Resolves dotted / indexed paths (e.g. `payload.user.id`, `req.headers["content-type"]`).
 - **`set_property(msg, prop_path, value)`**: Dynamically creates sub-dicts / lists and sets the target property.
@@ -104,13 +104,13 @@ Copy HTML node definitions to make them available to the Node-RED editor client:
 - `C:\Documents\Programming\node-red\packages\node_modules\@node-red\nodes\core\function\10-switch.html` -> `static/nodes/core/function/10-switch.html`
 - `15-change.html`, `16-range.html`, `89-delay.html`, `89-trigger.html` -> `static/nodes/core/function/`
 - `C:\Documents\Programming\node-red\packages\node_modules\@node-red\nodes\core\common\90-comment.html` -> `static/nodes/core/common/90-comment.html`
-- Register the new nodes in `src/fastapi_red/runtime/registry.py` under `load_core_nodes()`.
+- Register the new nodes in `src/red_fastapi/runtime/registry.py` under `load_core_nodes()`.
 
-### Step 2: Implement Property Utility (`src/fastapi_red/runtime/eval.py`)
+### Step 2: Implement Property Utility (`src/red_fastapi/runtime/eval.py`)
 - Implement path resolution, type evaluation, and mutation functions.
 - Add unit tests for deep property path getting/setting/deleting.
 
-### Step 3: Implement Sequence & Logic Nodes (`src/fastapi_red/runtime/logic_nodes.py`)
+### Step 3: Implement Sequence & Logic Nodes (`src/red_fastapi/runtime/logic_nodes.py`)
 - `ChangeNode`: Implement `set`, `change`, `delete`, `move` operations.
 - `SwitchNode`: Implement operators (`eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `btwn`, `cont`, `regex`, `true`, `false`, `null`, `nnull`, `empty`, `nempty`, `else`).
 - `RangeNode`: Implement linear interpolation `(val - a_min) / (a_max - a_min) * (b_max - b_min) + b_min` with clamp/wrap/roll options.
@@ -119,7 +119,7 @@ Copy HTML node definitions to make them available to the Node-RED editor client:
 - `CommentNode`: Pure metadata dummy node.
 
 ### Step 4: Register in `FlowEngine`
-- Update `_node_constructors` in `src/fastapi_red/runtime/engine.py` to map:
+- Update `_node_constructors` in `src/red_fastapi/runtime/engine.py` to map:
   - `"change"` -> `ChangeNode`
   - `"switch"` -> `SwitchNode`
   - `"range"` -> `RangeNode`

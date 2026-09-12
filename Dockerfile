@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for fastapi-red
+# Multi-stage Dockerfile for red-fastapi
 # Stage 1: Build & wheels preparation
 FROM python:3.12-slim AS builder
 
@@ -34,12 +34,12 @@ COPY nodes/ /app/nodes/
 COPY storage/ /app/storage/
 COPY pyproject.toml /app/
 
-# Expose standard FastAPI-Red / Node-RED HTTP port
+# Expose standard Red-Fastapi / Node-RED HTTP port
 EXPOSE 8080
 
 # Default storage volume mount point
 VOLUME ["/app/storage"]
 
-# Start uvicorn server serving fastapi-red
-CMD ["uvicorn", "fastapi_red.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Start uvicorn server serving red-fastapi
+CMD ["uvicorn", "red_fastapi.main:app", "--host", "0.0.0.0", "--port", "8080"]
 

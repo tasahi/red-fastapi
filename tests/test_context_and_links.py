@@ -10,11 +10,11 @@ Tests:
 
 import asyncio
 import pytest
-from fastapi_red.runtime.context import context_manager
-from fastapi_red.runtime.node import Node
-from fastapi_red.runtime.core_nodes import FunctionNode
-from fastapi_red.runtime.logic_nodes import ChangeNode
-from fastapi_red.runtime.sequence_nodes import LinkInNode, LinkOutNode, LinkCallNode
+from red_fastapi.runtime.context import context_manager
+from red_fastapi.runtime.node import Node
+from red_fastapi.runtime.core_nodes import FunctionNode
+from red_fastapi.runtime.logic_nodes import ChangeNode
+from red_fastapi.runtime.sequence_nodes import LinkInNode, LinkOutNode, LinkCallNode
 
 
 class MockFlow:

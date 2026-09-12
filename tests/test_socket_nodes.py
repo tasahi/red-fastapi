@@ -11,8 +11,8 @@ import asyncio
 import json
 import pytest
 from unittest.mock import MagicMock
-from fastapi_red.runtime.engine import engine
-from fastapi_red.runtime.socket_nodes import (
+from red_fastapi.runtime.engine import engine
+from red_fastapi.runtime.socket_nodes import (
     TCPInNode,
     TCPOutNode,
     UDPInNode,

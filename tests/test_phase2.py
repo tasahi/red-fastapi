@@ -8,8 +8,8 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from fastapi_red.main import app
-from fastapi_red.runtime import nodes as runtime_nodes
+from red_fastapi.main import app
+from red_fastapi.runtime import nodes as runtime_nodes
 
 
 # Initialize runtime nodes for tests

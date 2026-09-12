@@ -11,13 +11,13 @@ Tests:
 
 import asyncio
 import pytest
-from fastapi_red.runtime.eval import (
+from red_fastapi.runtime.eval import (
     get_property,
     set_property,
     delete_property,
     evaluate_value,
 )
-from fastapi_red.runtime.logic_nodes import (
+from red_fastapi.runtime.logic_nodes import (
     ChangeNode,
     SwitchNode,
     RangeNode,

@@ -9,9 +9,9 @@ Tests:
 import asyncio
 import pytest
 from httpx import AsyncClient, ASGITransport
-from fastapi_red.main import app
-from fastapi_red.runtime.engine import engine
-from fastapi_red.runtime.network_nodes import HTTPInNode, HTTPResponseNode, HTTPRequestNode
+from red_fastapi.main import app
+from red_fastapi.runtime.engine import engine
+from red_fastapi.runtime.network_nodes import HTTPInNode, HTTPResponseNode, HTTPRequestNode
 
 
 @pytest.mark.asyncio
@@ -30,7 +30,7 @@ async def test_dynamic_http_in_and_response_pipeline():
             "id": "res_1",
             "type": "http response",
             "statusCode": 200,
-            "headers": {"X-Custom-Header": "FastAPI-Red"},
+            "headers": {"X-Custom-Header": "Red-Fastapi"},
             "wires": []
         }
     ]
@@ -43,7 +43,7 @@ async def test_dynamic_http_in_and_response_pipeline():
         # 1. Matching GET /http/hello
         resp = await client.get("/http/hello?name=world")
         assert resp.status_code == 200
-        assert resp.headers.get("x-custom-header") == "FastAPI-Red"
+        assert resp.headers.get("x-custom-header") == "Red-Fastapi"
         assert resp.json() == {"name": "world"}
 
         # 2. Non-matching endpoint 404

@@ -8,10 +8,10 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from fastapi_red.main import app
-from fastapi_red.config import settings
-from fastapi_red.runtime import flows as runtime_flows
-from fastapi_red.runtime import storage
+from red_fastapi.main import app
+from red_fastapi.config import settings
+from red_fastapi.runtime import flows as runtime_flows
+from red_fastapi.runtime import storage
 
 
 # Initialize storage and flows for test session

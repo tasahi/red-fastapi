@@ -1,10 +1,10 @@
 # Phase 11: Subflows & Custom Modules Specification
 
 ## Goal
-Implement Phase 11: Subflows & Custom Modules (`subflow:*` instances, subflow template definitions, internal wiring, input/output port mapping, env variable resolution, status/catch propagation) in `fastapi-red`.
+Implement Phase 11: Subflows & Custom Modules (`subflow:*` instances, subflow template definitions, internal wiring, input/output port mapping, env variable resolution, status/catch propagation) in `red-fastapi`.
 
 ## Proposed Architecture
-1. **`src/fastapi_red/runtime/subflow.py`**:
+1. **`src/red_fastapi/runtime/subflow.py`**:
    - `SubflowInstanceNode(Node)`:
      - Instantiated for any node whose `type.startswith("subflow:")`.
      - Maintains a dictionary of internal cloned nodes (`self.internal_nodes`).
@@ -23,18 +23,18 @@ Implement Phase 11: Subflows & Custom Modules (`subflow:*` instances, subflow te
      - Error & Status:
        - Catches internal errors / status updates and propagates to parent flow or subflow instance status badge.
 
-2. **`src/fastapi_red/runtime/node.py`**:
+2. **`src/red_fastapi/runtime/node.py`**:
    - Add `get_env(name: str)` method to `Node` base class, traversing `self.flow` / subflow instance or falling back to `os.environ.get(name, "")`.
 
-3. **`src/fastapi_red/runtime/eval.py`**:
+3. **`src/red_fastapi/runtime/eval.py`**:
    - In `evaluate_value`:
      - When `val_type == "env"`, check `node.get_env(str(val_value))` if `node` has `get_env`, else `os.environ.get(...)`.
 
-4. **`src/fastapi_red/runtime/core_nodes.py`**:
+4. **`src/red_fastapi/runtime/core_nodes.py`**:
    - In `FunctionNode`:
      - Inject `env` helper dictionary/accessor into the Python execution sandbox so functions can read `env.get("KEY")`.
 
-5. **`src/fastapi_red/runtime/engine.py`**:
+5. **`src/red_fastapi/runtime/engine.py`**:
    - In `FlowEngine.start()`:
      - Index subflow definitions (`type == "subflow"`).
      - When instantiating nodes, if `node_type.startswith("subflow:")`, instantiate `SubflowInstanceNode(config, flow=self, subflow_def=subflow_def)`.

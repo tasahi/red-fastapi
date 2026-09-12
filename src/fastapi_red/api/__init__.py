@@ -1,4 +1,0 @@
-"""
-FastAPI-Red API package.
-"""
-

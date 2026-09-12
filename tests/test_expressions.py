@@ -1,4 +1,4 @@
-""" Unit tests for the Expression Evaluator (JSONata and Python Expressions) in FastAPI-Red.
+""" Unit tests for the Expression Evaluator (JSONata and Python Expressions) in Red-Fastapi.
 
 Validates:
 - Direct JSONata expression evaluation: object projection, arithmetic, string concatenation, and array filtering
@@ -10,8 +10,8 @@ Validates:
 
 import asyncio
 import pytest
-from fastapi_red.runtime.eval import evaluate_jsonata_expression, evaluate_value
-from fastapi_red.runtime.engine import FlowEngine
+from red_fastapi.runtime.eval import evaluate_jsonata_expression, evaluate_value
+from red_fastapi.runtime.engine import FlowEngine
 
 
 def test_jsonata_direct_evaluations():
