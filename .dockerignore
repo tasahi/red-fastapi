@@ -1,0 +1,31 @@
+# Git & Version Control
+.git/
+.gitignore
+
+# Python Bytecode and Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project local artifacts
+storage/*.json
+!storage/.gitkeep
+tmp/
+*.log
+

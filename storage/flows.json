@@ -1,0 +1,18 @@
+[
+    {
+        "type": "tab",
+        "id": "tab_dbg",
+        "label": "Debug Tab",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "dbg_toggle",
+        "type": "debug",
+        "z": "tab_dbg",
+        "name": "Dbg",
+        "active": true,
+        "wires": []
+    }
+]
