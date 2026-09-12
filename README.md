@@ -13,7 +13,27 @@ Using your Anaconda environment `fapi`:
 C:\Programs\Python3\Scripts\activate fapi
 ```
 
-### 2. Run the Server
+### 2. Compile the Frontend with Vite (Modular Compilation)
+
+Before starting the server (or after modifying node UI templates), compile the editor shell, stylesheets, and modular node chunks:
+
+```bash
+# 1. Install frontend build dependencies (first time only)
+npm install
+
+# 2. Build editor bundle and modular node chunks to dist/
+npm run build
+```
+
+> **What `npm run build` does:**
+> - Compiles and minifies the editor shell HTML and CSS into `dist/`.
+> - Pre-compiles each node template into an isolated, modular chunk in `dist/nodes/core/` (minifying `<script type="text/html">` forms and tree-shaking `<script type="text/javascript">` blocks via ESBuild).
+> - Copies standalone runtime resources (`locales`, `icons`, `vendor`, `debug`) into `dist/`.
+> - When `dist/` is present, FastAPI automatically serves from `dist/` and loads pre-compiled modular node chunks.
+
+### 3. Run the Backend Server
+
+Once built (or directly in dev mode using fallback to `static/`):
 
 Using the runner script:
 ```cmd
@@ -25,10 +45,10 @@ Or directly with python/uvicorn:
 python -m uvicorn fastapi_red.main:app --host 127.0.0.1 --port 8080 --reload
 ```
 
-Once running, navigate to:  
+Navigate to:  
 **`http://127.0.0.1:8080/`**
 
-### 3. Run with Docker
+### 4. Run with Docker
 
 Build and run using Docker Compose:
 ```bash
@@ -42,6 +62,68 @@ docker run -d -p 8080:8080 -v ${PWD}/storage:/app/storage --name fastapi-red fas
 ```
 
 The editor will be accessible at **`http://localhost:8080/`** with persistent flow storage in `./storage`.
+
+### 5. Production Architecture: Serving Static Files with Apache at the Entrance
+
+In production environments, an **Apache HTTP Server (`httpd`)** can sit at the entrance to serve the compiled static assets (`dist/`) directly at wire speed, while reverse-proxying API calls and WebSockets to the `fastapi-red` container.
+
+#### Request Routing Flow:
+```
+Client Browser
+     │
+     ▼ (Port 80 / 443)
+┌────────────────────────────────────────────────────────┐
+│ Apache HTTP Server (Gateway / Ingress)                 │
+│                                                        │
+│  • Static assets (/assets/*, /vendor/*, /locales/*)    │──> Delivered directly from dist/ volume
+│  • Dynamic APIs (/nodes, /flows, /settings, etc.)      │──> ProxyPass to http://fastapi-red:8080
+│  • Real-time WebSocket event bus (/comms)              │──> ProxyPass to ws://fastapi-red:8080/comms
+└────────────────────────────────────────────────────────┘
+     │
+     ▼
+┌────────────────────────────────────────────────────────┐
+│ FastAPI-Red Backend (Execution Engine)                 │
+│  • Asyncio flow engine & node executors                │
+│  • Node registry & dynamic catalog resolution          │
+│  • WebSocket /comms event streaming                    │
+└────────────────────────────────────────────────────────┘
+```
+
+#### Apache VirtualHost Configuration Example:
+```apache
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot "/var/www/html/dist"
+
+    <Directory "/var/www/html/dist">
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    # 1. Reverse-Proxy WebSocket comms (Node-RED real-time event bus)
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteRule ^/comms(.*) ws://fastapi-red:8080/comms$1 [P,L]
+
+    # 2. Reverse-Proxy Dynamic FastAPI Endpoints
+    ProxyPreserveHost On
+    ProxyPass /nodes http://fastapi-red:8080/nodes
+    ProxyPassReverse /nodes http://fastapi-red:8080/nodes
+
+    ProxyPass /flows http://fastapi-red:8080/flows
+    ProxyPassReverse /flows http://fastapi-red:8080/flows
+
+    ProxyPass /settings http://fastapi-red:8080/settings
+    ProxyPassReverse /settings http://fastapi-red:8080/settings
+
+    ProxyPass /locales http://fastapi-red:8080/locales
+    ProxyPassReverse /locales http://fastapi-red:8080/locales
+
+    # 3. Static Files (HTML, JS, CSS, vendor, icons, fonts)
+    DirectoryIndex index.html
+</VirtualHost>
+```
 
 ---
 

@@ -1,0 +1,19 @@
+{
+  "name": "fastapi-red-frontend",
+  "version": "0.1.0",
+  "description": "Vite frontend compiler and modular node builder for fastapi-red",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:editor": "vite build",
+    "build:nodes": "node scripts/build-nodes.js",
+    "build": "npm run build:editor && npm run build:nodes"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "html-minifier-terser": "^7.2.0",
+    "vite": "^6.2.0"
+  }
+}
+

@@ -29,6 +29,7 @@ COPY --from=builder /root/.local /root/.local
 # Copy application directories
 COPY src/ /app/src/
 COPY static/ /app/static/
+COPY dist/ /app/dist/
 COPY nodes/ /app/nodes/
 COPY storage/ /app/storage/
 COPY pyproject.toml /app/

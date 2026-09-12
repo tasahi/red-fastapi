@@ -51,13 +51,25 @@ def register_node_set(module_name: str, set_name: str, types: List[str], html_pa
         }
 
     set_id = f"{module_name}/{set_name}"
+
+    # Prefer pre-compiled modular chunk from dist/nodes if available
+    effective_html = html_path
+    if settings.nodes_dist_dir.exists():
+        try:
+            rel = html_path.relative_to(settings.nodes_dir)
+            dist_candidate = settings.nodes_dist_dir / rel
+            if dist_candidate.is_file():
+                effective_html = dist_candidate
+        except ValueError:
+            pass
+
     node_entry = {
         "id": set_id,
         "name": set_name,
         "types": types,
         "enabled": enabled,
         "module": module_name,
-        "html_path": html_path
+        "html_path": effective_html
     }
 
     module_configs[module_name]["nodes"][set_name] = node_entry

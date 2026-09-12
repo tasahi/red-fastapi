@@ -117,6 +117,17 @@ Direct static source code analysis of the official upstream Node-RED monorepo (`
 ### 3. The "Function" Node Execution
 * Standard Node-RED uses Node.js `vm`. In `fastapi-red`, Function nodes execute native Python expressions/code blocks with `msg` in local scope.
 
+### 4. Frontend Compilation & Static Ingress Architecture
+* **Vite Modular Compilation (`npm run build`)**:
+  - Minifies the editor client and stylesheet bundle into `dist/`.
+  - Minifies and tree-shakes every node template into an isolated modular chunk in `dist/nodes/core/`.
+  - Copies standalone static assets (`vendor/`, `locales/`, `icons/`, `debug/`).
+* **FastAPI Direct Serving (Dev / Standalone)**:
+  - Automatically mounts and serves `dist/` if present, with dynamic resolution of modular node chunks.
+* **Apache Ingress Delivery (Production / Docker)**:
+  - In a containerized topology, Apache HTTP Server sits at the entrance (`:80`/`:443`) delivering `dist/` static files directly from volume mount at wire speed.
+  - Apache reverse-proxies REST endpoints (`/nodes`, `/flows`, `/settings`) and WebSocket comms (`/comms`) directly to the `fastapi-red` container.
+
 ---
 
 ## 5. Implementation Roadmap Status

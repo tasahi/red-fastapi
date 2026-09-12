@@ -29,3 +29,6 @@ storage/*.json
 tmp/
 *.log
 
+# Node dependencies
+node_modules/
+
