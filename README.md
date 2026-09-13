@@ -1,16 +1,19 @@
 # Project Overview: red-fastapi
 
-`red-fastapi` is a lightweight, high-performance Python (FastAPI) implementation of the Node-RED backend, designed to host and drive the official, unmodified Node-RED frontend editor (`@node-red/editor-client`).
+Why another implementation?
+The idea behind this project is to have the backend in Python, in order to add future funcionalities using all the Python ecosystem .
+
+`red-fastapi` is a lightweight, high-performance Python (FastAPI) implementation of the [Node-RED](https://nodered.org/) backend, designed to host and drive the official, unmodified Node-RED frontend editor (`@node-red/editor-client`).
 
 ---
 
 ## Getting Started
 
 ### 1. Environment Activation
-Using your Anaconda environment `fapi`:
+Using your Anaconda environment `redapi`:
 
 ```powershell
-C:\Programs\Python3\Scripts\activate fapi
+conda activate redapi
 ```
 
 ### 2. Compile the Frontend with Vite (Modular Compilation)
@@ -372,7 +375,10 @@ The backend is organized cleanly into modular layers aligned with upstream `@nod
 ## Technical Documentation
 
 Detailed architectural notes and specifications are available in the `docs/` folder:
-- [fast-api_basics.md](file:///c:/Documents/Programming/red-fastapi/docs/fast-api_basics.md): Objectives & Key Findings (OKF) technical specification document.
-- [implementation_plan.md](file:///c:/Documents/Programming/red-fastapi/docs/implementation_plan.md): Comprehensive implementation plan and architectural breakdown.
-- [plan_core_and_sequence_nodes.md](file:///c:/Documents/Programming/red-fastapi/docs/plan_core_and_sequence_nodes.md): Architecture and roadmap for Core Execution and Sequence & Logic Nodes.
-- [gap_analysis.md](file:///c:/Documents/Programming/red-fastapi/docs/gap_analysis.md): Technical gap analysis comparing Node-RED (Node.js) vs Red-Fastapi (Python).
+- [fast-api_basics.md](./docs/fast-api_basics.md): Objectives & Key Findings (OKF) technical specification document.
+- [implementation_plan.md](./docs/implementation_plan.md): Comprehensive implementation plan and architectural breakdown.
+- [plan_core_and_sequence_nodes.md](./docs/plan_core_and_sequence_nodes.md): Architecture and roadmap for Core Execution and Sequence & Logic Nodes.
+- [gap_analysis.md](./docs/gap_analysis.md): Technical gap analysis comparing Node-RED (Node.js) vs Red-Fastapi (Python).
+
+## Note:
+For this implementation, AI agents were used to plan and create the code, with stage by stage implementation and validation. Please create your examples and please help to test it.
