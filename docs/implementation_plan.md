@@ -268,6 +268,9 @@ red-fastapi/
   - `S3ConfigNode`: Centralized credential and endpoint configuration for AWS S3 and MinIO instances.
   - `S3InNode`: Downloads and fetches blob objects from AWS S3 or MinIO buckets into strings, JSON objects, or bytes.
   - `S3OutNode`: Uploads, creates, or deletes blob objects in AWS S3 or MinIO buckets.
+- [x] Pluggable Project Flow Storage Engine (`red_fastapi.runtime.storage`):
+  - `LocalFileStorageDriver`: Default local disk persistence in `storage/flows.json` and `storage/flows_cred.json`.
+  - `S3StorageDriver`: Direct project persistence into AWS S3 or MinIO buckets, activated via `STORAGE_TYPE=s3` with `S3_BUCKET`, `S3_ENDPOINT_URL`, and credentials.
 - [x] Registered HTML templates in `nodes/core/storage/` and `nodes/core/parsers/`.
 - [x] Validated with automated tests (`tests/test_storage_and_parsers.py`).
 

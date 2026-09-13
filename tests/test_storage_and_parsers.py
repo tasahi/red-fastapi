@@ -342,3 +342,51 @@ async def test_s3_and_minio_blob_nodes():
 
     await engine.stop()
 
+
+@pytest.mark.asyncio
+async def test_s3_storage_driver():
+    """ Tests S3StorageDriver reading and saving flows and credentials with mock boto3 client.
+    """
+    from red_fastapi.runtime.storage import S3StorageDriver
+    from red_fastapi.config import settings
+
+    driver = S3StorageDriver()
+    mock_s3 = MagicMock()
+    driver._client = mock_s3
+
+    # 1. Test saving flows
+    flows = [{"id": "tab1", "type": "tab", "label": "Flow 1"}]
+    rev = driver.save_flows(flows)
+    assert rev is not None
+    assert mock_s3.put_object.called
+    put_args = mock_s3.put_object.call_args[1]
+    assert put_args["Bucket"] == settings.s3_bucket
+    assert put_args["Key"] == settings.s3_flows_key
+    assert b'"Flow 1"' in put_args["Body"]
+
+    # 2. Test getting flows
+    mock_body = MagicMock()
+    mock_body.read.return_value = b'[{"id": "tab1", "type": "tab", "label": "Flow 1"}]'
+    mock_s3.get_object.return_value = {"Body": mock_body}
+
+    driver._cached_flows = None
+    driver._cached_rev = None
+    loaded_flows, loaded_rev = driver.get_flows()
+    assert loaded_flows[0]["label"] == "Flow 1"
+    assert loaded_rev == rev
+
+    # 3. Test saving credentials
+    creds = {"node1": {"password": "secret123"}}
+    driver.save_credentials(creds)
+    assert mock_s3.put_object.call_count >= 2
+    cred_args = mock_s3.put_object.call_args[1]
+    assert cred_args["Key"] == settings.s3_credentials_key
+    assert b'"secret123"' in cred_args["Body"]
+
+    # 4. Test getting credentials
+    mock_cred_body = MagicMock()
+    mock_cred_body.read.return_value = b'{"node1": {"password": "secret123"}}'
+    mock_s3.get_object.return_value = {"Body": mock_cred_body}
+    loaded_creds = driver.get_credentials()
+    assert loaded_creds["node1"]["password"] == "secret123"
+

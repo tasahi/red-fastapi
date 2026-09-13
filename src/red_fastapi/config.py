@@ -40,5 +40,15 @@ class Settings(BaseSettings):
     flows_file: Path = FLOWS_FILE
     credentials_file: Path = CREDENTIALS_FILE
 
+    # Storage Backend Configuration ("local" or "s3")
+    storage_type: str = "local"
+    s3_bucket: str = "red-fastapi"
+    s3_endpoint_url: str | None = None
+    s3_region_name: str = "us-east-1"
+    s3_access_key_id: str | None = None
+    s3_secret_access_key: str | None = None
+    s3_flows_key: str = "flows.json"
+    s3_credentials_key: str = "flows_cred.json"
+
 
 settings = Settings()

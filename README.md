@@ -136,7 +136,43 @@ C:\Programs\Python3\Scripts\activate fapi
 pytest tests/
 ```
 
-Currently, **68 automated unit and integration tests** are active across core runtime phases, sequence/logic nodes, flow control nodes, context hierarchy, link routing, dynamic HTTP ingress/egress, socket/MQTT network nodes, composite subflow modules, local file storage, AWS S3 / MinIO blob storage, and the JSONata & Python expression evaluator engine.
+Currently, **69 automated unit and integration tests** are active across core runtime phases, sequence/logic nodes, flow control nodes, context hierarchy, link routing, dynamic HTTP ingress/egress, socket/MQTT network nodes, composite subflow modules, local file storage, AWS S3 / MinIO blob storage, and the JSONata & Python expression evaluator engine.
+
+---
+
+## Storage Backend Configuration (Local, AWS S3, MinIO)
+
+`red-fastapi` features a pluggable project flow storage engine. By default, it saves flows and credentials to the local disk. You can switch to AWS S3 or MinIO by configuring environment variables or a `.env` file:
+
+### 1. Local Filesystem (Default)
+```bash
+STORAGE_TYPE=local
+USER_DIR=storage           # Defaults to <root>/storage
+FLOWS_FILE=storage/flows.json
+CREDENTIALS_FILE=storage/flows_cred.json
+```
+
+### 2. AWS S3 Storage
+```bash
+STORAGE_TYPE=s3
+S3_BUCKET=my-company-flows
+S3_REGION_NAME=us-east-1
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+S3_FLOWS_KEY=production/flows.json
+S3_CREDENTIALS_KEY=production/flows_cred.json
+```
+
+### 3. MinIO Object Storage
+```bash
+STORAGE_TYPE=s3
+S3_BUCKET=node-red-flows
+S3_ENDPOINT_URL=http://127.0.0.1:9000
+S3_ACCESS_KEY_ID=minioadmin
+S3_SECRET_ACCESS_KEY=minioadmin
+S3_FLOWS_KEY=flows.json
+S3_CREDENTIALS_KEY=flows_cred.json
+```
 
 ---
 
