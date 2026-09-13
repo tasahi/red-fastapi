@@ -17,15 +17,18 @@ loaded_plugins: List[BasePlugin] = []
 
 def load_plugins(app: FastAPI) -> None:
     """ Discovers and registers all installed plugins via standard Python entry points.
-    Entry point group: 'red_fastapi.plugins'
+    Checks both 'red_fastapi.plugins' and legacy 'fastapi_red.plugins' entry point groups.
     """
     logger.info("Scanning for installed Red-Fastapi plugins...")
 
-    try:
-        discovered = entry_points(group="red_fastapi.plugins")
-    except Exception as e:
-        logger.warning(f"Error accessing entry_points: {e}")
-        return
+    discovered = []
+    for group_name in ("red_fastapi.plugins", "fastapi_red.plugins"):
+        try:
+            discovered.extend(entry_points(group=group_name))
+        except Exception as e:
+            logger.warning(f"Error accessing entry_points for {group_name}: {e}")
+
+    seen_names = {p.name for p in loaded_plugins}
 
     for ep in discovered:
         try:
@@ -35,6 +38,10 @@ def load_plugins(app: FastAPI) -> None:
                 continue
 
             plugin: BasePlugin = plugin_cls()
+            if plugin.name in seen_names:
+                continue
+            seen_names.add(plugin.name)
+
             logger.info(f"Loading plugin '{plugin.name}' (v{plugin.version})...")
 
             # 1. Register node templates and icons
