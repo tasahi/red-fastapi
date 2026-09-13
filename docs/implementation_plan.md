@@ -300,6 +300,6 @@ red-fastapi/
 | **Phase 9** | Network Ingress & Egress | Dynamic `/http/*` listener, HTTP In, HTTP Response, HTTP Request (httpx) | 3 tests (`test_network_nodes.py`) |
 | **Phase 10** | MQTT & Socket Protocols | MQTT Broker/In/Out (paho-mqtt), TCP In/Out, UDP In/Out, WebSocket In/Out | 4 tests (`test_socket_nodes.py`) |
 | **Phase 11** | Subflows & Modules | Subflow templates, instances, nested subflows, port remapping, scoped env | 5 tests (`test_subflows.py`) |
-| **Phase 12** | Storage & Parsers | Filesystem (File, File In), AWS S3 / MinIO (In/Out/Config), JSON, CSV, YAML, XML, HTML | 5 tests (`test_storage_and_parsers.py`) |
+| **Phase 12** | Storage & Parsers | Filesystem (File, File In), AWS S3 / MinIO (In/Out/Config & Project Persistence), JSON, CSV, YAML, XML, HTML | 6 tests (`test_storage_and_parsers.py`) |
 | **Phase 13** | Expression Evaluator | JSONata expressions (`jsonata-python`), Python expressions, Switch & Change integration | 4 tests (`test_expressions.py`) |
-| **Total** | **Full Application Runtime** | **Complete Red-Fastapi Backend (34+ Executable Nodes)** | **68/68 Passing Tests** |
+| **Total** | **Full Application Runtime** | **Complete Red-Fastapi Backend (34+ Executable Nodes)** | **69/69 Passing Tests** |

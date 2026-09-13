@@ -13,7 +13,7 @@ date: September 2026
 
 **Project:** `red-fastapi`  
 **Document Type:** Objectives & Key Findings (OKF) / Technical One-Pager  
-**Status:** All 13 Phases Completed (68/68 Automated Tests Passing)  
+**Status:** All 13 Phases Completed (69/68 Automated Tests Passing)  
 **Target:** Port Node-RED backend to Python (FastAPI) while preserving 100% of the stock frontend editor  
 **Date:** September 2026  
 
@@ -58,17 +58,9 @@ Direct static source code analysis of the official upstream Node-RED monorepo (`
   - Theme definitions (light, dark, custom CSS variables).
   - Workspace and widget UI styling.
 - **Core Node Dialogs & Palettes (9,210 SLOC / 38 files):**
-  - Client-side `<script type="text/html">` forms and help docs for core nodes (`inject`, `debug`, `function`, `http`, `mqtt`, etc.).
+  - `<script type="text/html">` edit dialog forms, help sidebars, and client registration code.
 
 #### B. Backend (`~34.7k` SLOC)
-- **`@node-red/runtime/` (15,862 SLOC / 42 files):**
-  - Flow execution engine, event emitter pipeline, context management (`memory`, `localfilesystem`).
-  - Credentials encryption and storage adapters.
-  - Node instance lifecycle (`input`, `send`, `close`).
-- **`@node-red/editor-api/` (6,419 SLOC / 25 files):**
-  - REST endpoints (`/settings`, `/nodes`, `/flows`, `/locales`, `/auth`).
-  - WebSocket `/comms` event bus handler.
-- **Core Node Runtime Logic (12,400 SLOC / 38 files):**
   - Backend execution implementations of standard nodes (`20-inject.js`, `21-debug.js`, `80-template.js`, etc.).
 
 ---
@@ -118,12 +110,17 @@ Direct static source code analysis of the official upstream Node-RED monorepo (`
 * Standard Node-RED uses Node.js `vm`. In `red-fastapi`, Function nodes execute native Python expressions/code blocks with `msg` in local scope.
 
 ### 4. Frontend Compilation & Static Ingress Architecture
+* **Automated Upstream Sync (`npm run update:upstream`)**:
+  - Automatically pulls the latest `@node-red/editor-client` and `@node-red/nodes` packages from npm.
+  - Synchronizes web assets, Monaco/Ace workers, core node templates, and locales into `static/` and `nodes/core/` via `scripts/sync-upstream.js`.
 * **Vite Modular Compilation (`npm run build`)**:
   - Minifies the editor client and stylesheet bundle into `dist/`.
   - Minifies and tree-shakes every node template into an isolated modular chunk in `dist/nodes/core/`.
   - Copies standalone static assets (`vendor/`, `locales/`, `icons/`, `debug/`).
 * **FastAPI Direct Serving (Dev / Standalone)**:
   - Automatically mounts and serves `dist/` if present, with dynamic resolution of modular node chunks.
+* **Pluggable Project Flow Storage (Local, AWS S3, MinIO)**:
+  - Configurable via `STORAGE_TYPE=local` or `STORAGE_TYPE=s3` with automatic bucket provisioning and credentials management.
 * **Apache Ingress Delivery (Production / Docker)**:
   - In a containerized topology, Apache HTTP Server sits at the entrance (`:80`/`:443`) delivering `dist/` static files directly from volume mount at wire speed.
   - Apache reverse-proxies REST endpoints (`/nodes`, `/flows`, `/settings`) and WebSocket comms (`/comms`) directly to the `red-fastapi` container.

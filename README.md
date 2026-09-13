@@ -31,6 +31,19 @@ npm run build
 > - Copies standalone runtime resources (`locales`, `icons`, `vendor`, `debug`) into `dist/`.
 > - When `dist/` is present, FastAPI automatically serves from `dist/` and loads pre-compiled modular node chunks.
 
+#### Automated Upstream Updates (Node-RED Releases)
+
+To pull the latest official Node-RED editor UI and core node templates from upstream npm packages (`@node-red/editor-client` and `@node-red/nodes`), run:
+
+```cmd
+npm run update:upstream
+```
+
+This single command:
+1. Installs the latest `@node-red/editor-client` and `@node-red/nodes` from npm.
+2. Runs `scripts/sync-upstream.js` to synchronize the compiled web assets into `static/` and node templates into `nodes/core/`.
+3. Runs `npm run build` to re-bundle and minify everything into `dist/`.
+
 ### 3. Run the Backend Server
 
 Once built (or directly in dev mode using fallback to `static/`):

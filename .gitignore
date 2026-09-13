@@ -9,5 +9,22 @@ wheels/
 # Virtual environments
 .venv/
 
-# Node dependencies
+# NPM & Node dependencies
 node_modules/
+
+# Synchronized Upstream Node-RED Assets
+# (Generated automatically via `npm run sync` / `npm run update:upstream`)
+nodes/core/
+static/red/
+static/vendor/
+static/locales/
+static/types/
+static/icons/
+static/debug/
+static/favicon.ico
+
+# User Flow Storage & Runtime State
+storage/
+*.backup
+*.tmp
+

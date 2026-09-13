@@ -6,14 +6,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sync": "node scripts/sync-upstream.js",
+    "update:upstream": "npm install @node-red/editor-client@latest @node-red/nodes@latest && npm run sync && npm run build",
     "build:editor": "vite build",
     "build:nodes": "node scripts/build-nodes.js",
     "build": "npm run build:editor && npm run build:nodes"
   },
   "devDependencies": {
+    "@node-red/editor-client": "^5.0.7",
+    "@node-red/nodes": "^5.0.7",
     "esbuild": "^0.25.0",
     "html-minifier-terser": "^7.2.0",
     "vite": "^6.2.0"
   }
 }
-
