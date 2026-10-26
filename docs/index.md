@@ -33,6 +33,7 @@ Welcome to the technical documentation repository for **`red-fastapi`**, an asyn
 | **[gap_analysis.md](./gap_analysis.md)** | In-depth technical gap analysis comparing Node-RED (Node.js runtime) vs Red-FastAPI (Python asyncio engine), node coverage, and behavioral differences. | Gap Analysis |
 | **[plan_core_and_sequence_nodes.md](./plan_core_and_sequence_nodes.md)** | Specific design and verification plan for Core Execution, Sequence, and Flow Control nodes. | Technical Design |
 | **[subflow_plan.md](./subflow_plan.md)** | Subflow execution runtime architecture, port mapping, scoped environments, and nested subflow routing. | Technical Design |
+| **[json_rpc_mcp_plan.md](./json_rpc_mcp_plan.md)** | Architecture and detailed implementation plan for JSON-RPC 2.0 and MCP (Model Context Protocol) integration. | Architecture & Roadmap |
 
 ---
 

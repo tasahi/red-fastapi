@@ -92,6 +92,7 @@ Detailed architectural notes, specifications, production deployment guides, and 
 - **[Core & Sequence Nodes Plan (`plan_core_and_sequence_nodes.md`)](./docs/plan_core_and_sequence_nodes.md)**: Architecture for Core Execution and Sequence & Logic Nodes.
 - **[Technical Gap Analysis (`gap_analysis.md`)](./docs/gap_analysis.md)**: Technical gap analysis comparing Node-RED (Node.js) vs Red-FastAPI (Python).
 - **[Subflow Implementation Plan (`subflow_plan.md`)](./docs/subflow_plan.md)**: Subflow execution runtime architecture and port mapping.
+- **[JSON-RPC & MCP Plan (`json_rpc_mcp_plan.md`)](./docs/json_rpc_mcp_plan.md)**: Architecture and implementation plan for JSON-RPC 2.0 and MCP capabilities.
 
 ## License
 
