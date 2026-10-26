@@ -1,18 +1,23 @@
 [
     {
+        "id": "tab1",
         "type": "tab",
-        "id": "tab_dbg",
-        "label": "Debug Tab",
-        "disabled": false,
-        "info": "",
-        "env": []
+        "label": "RPC Test Flow"
     },
     {
-        "id": "dbg_toggle",
-        "type": "debug",
-        "z": "tab_dbg",
-        "name": "Dbg",
-        "active": true,
-        "wires": []
+        "id": "inject1",
+        "type": "inject",
+        "z": "tab1",
+        "name": "Test Inject",
+        "topic": "test/rpc",
+        "payload": "initial",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "wires": [
+            []
+        ]
     }
 ]

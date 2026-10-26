@@ -242,14 +242,17 @@ One of the most powerful features of `red-fastapi` is allowing flow authors to v
   - Integration into `src/red_fastapi/main.py`
   - Full test coverage in `tests/test_rpc.py` (16 unit and integration tests passing).
 
-### Phase 14.2: Built-in Management RPC Methods
+### Phase 14.2: Built-in Management RPC Methods — [COMPLETED]
 - **Goal:** Expose red-fastapi system management over JSON-RPC.
 - **Methods:**
-  - `system.info`: Runtime version, active nodes, flow engine status.
-  - `flows.start` / `flows.stop` / `flows.status`: Lifecycle control.
-  - `nodes.trigger`: Programmatically trigger inject nodes.
+  - `system.info`: Runtime version, active nodes, flow engine status, storage configuration.
+  - `flows.status` / `flows.get` / `flows.start` / `flows.stop` / `flows.set`: Lifecycle control and programmatic flow deployment.
+  - `nodes.list`: List active running nodes and registered node catalog.
+  - `nodes.trigger`: Programmatically trigger inject nodes or send messages into node handlers.
 - **Deliverables:**
-  - Unit tests verifying external RPC clients controlling red-fastapi flows.
+  - `src/red_fastapi/rpc/management.py`
+  - Integration with `default_dispatcher` in `src/red_fastapi/api/rpc.py`
+  - Comprehensive unit and integration test suite in `tests/test_rpc_management.py` (all tests passing).
 
 ### Phase 14.3: WebSocket & Bidirectional Transport
 - **Goal:** Real-time push, streaming notifications, and subscriptions.

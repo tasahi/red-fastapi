@@ -24,10 +24,12 @@ from red_fastapi.rpc.models import (
     JSONRPCResponse,
 )
 from red_fastapi.rpc.protocols import BaseDispatcherProtocol
+from red_fastapi.rpc.management import register_management_methods
 
 __all__ = [
     "JSONRPCDispatcher",
     "BaseDispatcherProtocol",
+    "register_management_methods",
     "JSONRPCMessage",
     "JSONRPCRequest",
     "JSONRPCResponse",
