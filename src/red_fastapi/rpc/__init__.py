@@ -25,11 +25,23 @@ from red_fastapi.rpc.models import (
 )
 from red_fastapi.rpc.protocols import BaseDispatcherProtocol
 from red_fastapi.rpc.management import register_management_methods
+from red_fastapi.rpc.streaming import register_streaming_methods
+from red_fastapi.rpc.transports.websocket import (
+    RPCWebSocketManager,
+    RPCWebSocketSession,
+    handle_rpc_websocket,
+    rpc_ws_manager,
+)
 
 __all__ = [
     "JSONRPCDispatcher",
     "BaseDispatcherProtocol",
     "register_management_methods",
+    "register_streaming_methods",
+    "RPCWebSocketManager",
+    "RPCWebSocketSession",
+    "handle_rpc_websocket",
+    "rpc_ws_manager",
     "JSONRPCMessage",
     "JSONRPCRequest",
     "JSONRPCResponse",

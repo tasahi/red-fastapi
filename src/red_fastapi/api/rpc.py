@@ -2,10 +2,12 @@
 Provides standard HTTP POST endpoint at `/api/rpc` (and optional alias `/rpc`).
 """
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Request, Response, WebSocket
 from red_fastapi.rpc.dispatcher import JSONRPCDispatcher
 from red_fastapi.rpc.management import register_management_methods
+from red_fastapi.rpc.streaming import register_streaming_methods
 from red_fastapi.rpc.transports.http import handle_http_rpc
+from red_fastapi.rpc.transports.websocket import handle_rpc_websocket
 
 router = APIRouter(tags=["JSON-RPC"])
 
@@ -29,6 +31,9 @@ async def list_methods() -> list[str]:
 # Register Phase 14.2 management methods (system.*, flows.*, nodes.*)
 register_management_methods(default_dispatcher)
 
+# Register Phase 14.3 streaming and subscription methods (stream.*)
+register_streaming_methods(default_dispatcher)
+
 
 @router.post("/api/rpc")
 @router.post("/rpc")
@@ -37,3 +42,12 @@ async def json_rpc_endpoint(request: Request) -> Response:
     Handles single requests, batch requests, and notifications.
     """
     return await handle_http_rpc(request, default_dispatcher)
+
+
+@router.websocket("/api/rpc/ws")
+@router.websocket("/rpc/ws")
+async def json_rpc_ws_endpoint(websocket: WebSocket) -> None:
+    """ Bidirectional JSON-RPC 2.0 WebSocket transport endpoint.\n
+    Supports requests, batching, client notifications, and server push notifications.
+    """
+    await handle_rpc_websocket(websocket, default_dispatcher)

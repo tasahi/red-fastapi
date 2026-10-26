@@ -254,11 +254,14 @@ One of the most powerful features of `red-fastapi` is allowing flow authors to v
   - Integration with `default_dispatcher` in `src/red_fastapi/api/rpc.py`
   - Comprehensive unit and integration test suite in `tests/test_rpc_management.py` (all tests passing).
 
-### Phase 14.3: WebSocket & Bidirectional Transport
+### Phase 14.3: WebSocket & Bidirectional Transport — [COMPLETED]
 - **Goal:** Real-time push, streaming notifications, and subscriptions.
 - **Deliverables:**
-  - `src/red_fastapi/rpc/transports/websocket.py` mounted at `/api/rpc/ws`.
-  - Notification dispatcher streaming runtime debug events.
+  - `src/red_fastapi/rpc/transports/websocket.py` mounted at `/api/rpc/ws` and `/rpc/ws`.
+  - `RPCWebSocketSession` and `RPCWebSocketManager` handling bidirectional event queues and connection tracking.
+  - `src/red_fastapi/rpc/streaming.py` exposing `stream.subscribe`, `stream.unsubscribe`, and `stream.broadcast`.
+  - Integration with `red_fastapi.runtime.comms` for event bridge forwarding.
+  - Comprehensive automated tests in `tests/test_rpc_websocket.py` (all tests passing).
 
 ### Phase 14.4: MCP Adapter & SSE Transport (Option C Parity)
 - **Goal:** Connect AI Agents (Claude Desktop, Cursor, Antigravity) to `red-fastapi`.
