@@ -1,23 +1,53 @@
 [
     {
-        "id": "tab1",
+        "id": "tab_mcp",
         "type": "tab",
-        "label": "RPC Test Flow"
+        "label": "MCP Tool Flow"
     },
     {
-        "id": "inject1",
-        "type": "inject",
-        "z": "tab1",
-        "name": "Test Inject",
-        "topic": "test/rpc",
-        "payload": "initial",
-        "payloadType": "str",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "id": "mcp_in_1",
+        "type": "mcp in",
+        "z": "tab_mcp",
+        "name": "Adder Tool",
+        "toolName": "add_numbers",
+        "description": "Adds two numbers together",
+        "schema": {
+            "properties": {
+                "a": {
+                    "type": "number"
+                },
+                "b": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "a",
+                "b"
+            ]
+        },
         "wires": [
-            []
+            [
+                "func_add"
+            ]
         ]
+    },
+    {
+        "id": "func_add",
+        "type": "function",
+        "z": "tab_mcp",
+        "name": "Add Function",
+        "func": "msg['payload'] = {'sum': msg['payload'].get('a', 0) + msg['payload'].get('b', 0)}; return msg;",
+        "wires": [
+            [
+                "mcp_out_1"
+            ]
+        ]
+    },
+    {
+        "id": "mcp_out_1",
+        "type": "mcp out",
+        "z": "tab_mcp",
+        "name": "Output Result",
+        "wires": []
     }
 ]

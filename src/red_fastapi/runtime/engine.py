@@ -62,6 +62,7 @@ from red_fastapi.runtime.storage_nodes import (
     S3InNode,
     S3OutNode,
 )
+from red_fastapi.runtime.mcp_nodes import MCPInNode, MCPOutNode
 from red_fastapi.runtime import comms
 
 
@@ -109,6 +110,8 @@ _node_constructors: Dict[str, Type[Node]] = {
     "s3-config": S3ConfigNode,
     "s3 in": S3InNode,
     "s3 out": S3OutNode,
+    "mcp in": MCPInNode,
+    "mcp out": MCPOutNode,
 }
 
 

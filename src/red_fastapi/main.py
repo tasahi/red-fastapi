@@ -20,6 +20,7 @@ from red_fastapi.api.comms import router as comms_router
 from red_fastapi.api.node_actions import router as node_actions_router
 from red_fastapi.api.http_in import router as http_in_router
 from red_fastapi.api.rpc import router as rpc_router
+from red_fastapi.mcp.sse import router as mcp_router
 from red_fastapi.runtime import nodes as runtime_nodes
 from red_fastapi.runtime import flows as runtime_flows
 from red_fastapi.runtime import comms as runtime_comms
@@ -63,6 +64,7 @@ app.include_router(comms_router)
 app.include_router(node_actions_router)
 app.include_router(http_in_router)
 app.include_router(rpc_router)
+app.include_router(mcp_router)
 
 # Discover and load third-party plugins (registers routers, nodes, engine types)
 load_plugins(app)

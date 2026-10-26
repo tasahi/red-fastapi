@@ -263,13 +263,17 @@ One of the most powerful features of `red-fastapi` is allowing flow authors to v
   - Integration with `red_fastapi.runtime.comms` for event bridge forwarding.
   - Comprehensive automated tests in `tests/test_rpc_websocket.py` (all tests passing).
 
-### Phase 14.4: MCP Adapter & SSE Transport (Option C Parity)
+### Phase 14.4: MCP Adapter & SSE Transport (Option C Parity) — [COMPLETED]
 - **Goal:** Connect AI Agents (Claude Desktop, Cursor, Antigravity) to `red-fastapi`.
 - **Deliverables:**
-  - `src/red_fastapi/mcp/` module implementing `initialize`, `tools/list`, `tools/call`.
-  - Server-Sent Events (SSE) router at `/mcp/sse` and message intake at `POST /mcp/messages`.
-  - MCP Node pair: `mcp-in` and `mcp-out` registered in `runtime_nodes`.
-  - Validation test suite matching official Model Context Protocol compliance test cases.
+  - `src/red_fastapi/mcp/` module implementing MCP 2024-11-05 protocol:
+    - Handshake & lifecycle: `initialize`, `notifications/initialized`, `ping`.
+    - Tools discovery and execution: `tools/list`, `tools/call`.
+    - Resources listing and reading: `resources/list`, `resources/read`.
+  - Server-Sent Events (SSE) router at `GET /mcp/sse` and message endpoint at `POST /mcp/messages`.
+  - MCP Node pair: `mcp in` (listens for tool calls) and `mcp out` (resolves tool calls) registered in `engine._node_constructors`.
+  - "Flow-as-a-Tool" runtime bridge with async future correlation.
+  - Comprehensive automated tests in `tests/test_mcp.py` (handshake, resources, flow tool execution, SSE initialization). All 28 RPC/MCP tests pass cleanly.
 
 ---
 
